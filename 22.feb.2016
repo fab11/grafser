@@ -1,0 +1,53 @@
+library(foreign)
+require(foreign)
+sdm215<- read.dbf("C:\\Users\\SALA-C10\\Downloads\\SDEMT215.dbf")
+sdm215<- data.frame (sdm215)
+help (str)
+str(sdm215)
+attach(sdm215)
+table(SEX)
+table(EDA)
+EDA1 <- as.numeric(as.character(EDA)) ##cambio numerico
+table(EDA1)
+install.packages("car")
+require (car)
+install.packages("memisc")
+require(memisc)
+install.packages("lattice")
+require(lattice)
+install.packages("MASS")
+require(MASS)
+require(memisc)
+help(recode) 
+
+###PONDERAR CASOS###########################
+install.packages("questionr")
+require(questionr)
+c0<- table(sdm215$SEX)##datos muestrales
+c0
+c1<-wtd.table(sdm215$SEX, weights=sdm215$FAC)##datos expandidos
+table(c1)
+c1
+write.csv(c1,file = '.......')##exportar archivos
+
+#######PORCENTAJES######3
+tabrama <-wtd.table (sdm215$SEX, weights = sdm215$FAC)###para tabla cruzada siempre usaremos wtd, que son los datos expandidos
+c1.1 <-round((tabrama/margin.table(tabrama))*100,2)###
+write.csv(c1.1,file='......')
+
+
+####ocupados y no ocupados#########################
+sdm215$SEX<- ordered(sdm215$SEX,levels = c(1,2), labels = c("Hombres","Mujeres"))#esta sirve para ordenar sexo y le digo que tiene dos categorias, despues les digo que me las etiquete los que tengan categoria 1 van a ser hombres
+##obtiene la variable CLASE2(poblacion ocupada y no ocupada) a la cual asigna etiquetas a los niveles
+c2<-wtd.table(sdm215$SEX, weights=sdm215$FAC)
+c2
+View(sdm215$SEX)
+
+
+###ejercicio clase, etiquetar la variable NAC_MES####
+
+sdm215$NAC_MES<- ordered(sdm215$NAC_MES,levels = c("01","02","03","04","05","06","07","08","09","10","11","12","99"), labels = c("ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE","NO ESPECIFICADO"))
+View(sdm215$NAC_MES)
+table (sdm215$NAC_MES)
+c3 <-wtd.table (sdm215$NAC_MES, weights = sdm215$FAC)
+c3
